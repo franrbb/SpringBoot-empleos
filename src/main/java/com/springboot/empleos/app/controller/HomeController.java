@@ -20,7 +20,7 @@ public class HomeController {
 	public String home(Model model) {
 		
 		model.addAttribute("titulo", "EmpleosApp | Aplicación para Publicar Ofertas de Trabajo.");
-		model.addAttribute("vacantes", vacanteService.listaVacantes());
+		model.addAttribute("vacantes", vacanteService.buscarPorEstatusAndDestacado("Aprobada", 1));
 		
 		return "home";
 	}

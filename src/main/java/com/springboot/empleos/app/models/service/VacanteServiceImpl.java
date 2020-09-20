@@ -20,4 +20,10 @@ public class VacanteServiceImpl implements IVacanteService {
 		return vacanteDao.findAll();
 	}
 
+	@Override
+	public List<Vacante> buscarPorEstatusAndDestacado(String estatus, int destacado) {
+		// TODO Auto-generated method stub
+		return vacanteDao.findByEstatusAndDestacado(estatus, destacado);
+	}
+
 }
