@@ -25,6 +25,11 @@
 		    </ul>
 		  </div>
 		</nav>
+		
+		<div class="mt-3">
+			<div class="alert alert-warning" th:if="${warning != null}" th:text="${warning}"></div>
+		</div>
+		
 	</header>
 	
 	<footer class="container" th:fragment="footer">

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springboot.empleos.app.models.entity.Vacante;
 import com.springboot.empleos.app.models.service.IVacanteService;
@@ -28,12 +29,13 @@ public class HomeController {
 	}
 	
 	@GetMapping("/detalle/{id}")
-	public String veDetalle(@PathVariable(value = "id")Long id, Model model) {
+	public String veDetalle(@PathVariable(value = "id")Long id, RedirectAttributes flash, Model model) {
 		
 		Vacante vacante = vacanteService.findOne(id);
 		
 		if(vacante == null) {
-			return "redirect:/home";
+			flash.addFlashAttribute("warning", "La vacante no existe");
+			return "redirect:/";	
 		}
 		
 		model.addAttribute("titulo", "EmpleosApp | Aplicación para Publicar Ofertas de Trabajo.");
