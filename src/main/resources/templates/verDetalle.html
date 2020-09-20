@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	
+	<main role="main">
+      <hr>
+      <div class="container"> 
+
+        <div class="row">
+          <div class="col-md-3">            
+            <img class="rounded mx-auto d-block" th:src="@{/img-vacantes/} + ${vacante.imagen}" th:alt="@{/img-vacantes/} + ${vacante.imagen}" width="220" height="220">            
+          </div>
+          <div class="col-md-9">
+            <div class="card">
+              <h4 class="card-header">Aplicar para <strong th:text="${vacante.nombre}"></strong></h4>              
+              <div class="card-body">
+                <h5 class="card-title"><strong>Categoría: </strong> <span th:text="${vacante.categoria.nombre}"> </span></h5>
+                <h6 class="card-title"><strong>Publicado: </strong> <span th:text="${#dates.format(vacante.fecha, 'dd/MM/yyyy')}"> </span></h6>                
+                <h6 class="card-title"><strong>Salario Ofrecido: </strong><span th:text="${vacante.salario}"></span></h6>
+                <p class="card-text" th:text="${vacante.descripcion}"></p>
+                
+                <div class="card bg-light mb-3" >
+                  <div class="card-body">
+                    <h5 class="card-title">Detalles de la oferta de trabajo</h5>
+                    <p class="card-text" th:utext="${vacante.detalles}"></p>
+                  </div>
+                </div>   
+                <a class="btn btn-primary" href="#" role="button" title="Quiero aplicar para esta oferta de trabajo."><i class="fas fa-file" aria-hidden="true"></i> Aplicar</a>                            
+              </div>
+            </div>  
+          </div>
+        </div>
+
+      </div>
+    </main>
+	
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

@@ -26,4 +26,10 @@ public class VacanteServiceImpl implements IVacanteService {
 		return vacanteDao.findByEstatusAndDestacado(estatus, destacado);
 	}
 
+	@Override
+	public Vacante findOne(Long id) {
+		// TODO Auto-generated method stub
+		return vacanteDao.findById(id).orElse(null);
+	}
+
 }

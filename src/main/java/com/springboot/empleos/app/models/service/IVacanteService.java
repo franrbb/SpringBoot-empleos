@@ -9,5 +9,7 @@ public interface IVacanteService {
 	public List<Vacante> listaVacantes();
 	
 	public List<Vacante> buscarPorEstatusAndDestacado(String estatus, int destacado);
+	
+	public Vacante findOne(Long id);
 
 }
