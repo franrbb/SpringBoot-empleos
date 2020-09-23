@@ -1,11 +1,19 @@
 package com.springboot.empleos.app.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.empleos.app.models.entity.Vacante;
 import com.springboot.empleos.app.models.service.ICategoriaService;
@@ -43,7 +51,24 @@ public class VacanteController {
 	}
 	
 	@PostMapping("/formVacante")
-	public String save(Vacante vacante, Model model) {
+	public String save(Vacante vacante, @RequestParam(value = "archivoImagen") MultipartFile file ,Model model) {
+		
+		if(!file.isEmpty()) {
+			
+			String uniqueFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+			//Crear ruta donde se guardan las imagenes. Se asocia el nombre a la ruta
+			Path rootPath = Paths.get("uploads").resolve(uniqueFilename);
+			//Agregamos la ruta absoluta
+			Path rootAbsolutePath = rootPath.toAbsolutePath();
+			
+			try {
+				Files.copy(file.getInputStream(), rootAbsolutePath);
+				vacante.setImagen(uniqueFilename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		vacanteService.save(vacante);
 		
