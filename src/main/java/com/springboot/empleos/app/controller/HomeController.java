@@ -38,6 +38,7 @@ public class HomeController {
 			return "redirect:/";	
 		}
 		
+		
 		model.addAttribute("titulo", "EmpleosApp | Aplicación para Publicar Ofertas de Trabajo.");
 		model.addAttribute("vacante", vacante);
 		
