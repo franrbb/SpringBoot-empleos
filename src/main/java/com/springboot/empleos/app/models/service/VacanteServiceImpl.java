@@ -32,4 +32,11 @@ public class VacanteServiceImpl implements IVacanteService {
 		return vacanteDao.findById(id).orElse(null);
 	}
 
+	@Override
+	public void save(Vacante vacante) {
+		// TODO Auto-generated method stub
+		vacanteDao.save(vacante);
+		
+	}
+
 }
