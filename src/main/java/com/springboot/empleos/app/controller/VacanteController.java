@@ -6,9 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +54,12 @@ public class VacanteController {
 	}
 	
 	@PostMapping("/formVacante")
-	public String save(Vacante vacante, @RequestParam(value = "archivoImagen") MultipartFile file ,Model model) {
+	public String save(@Valid Vacante vacante, BindingResult result ,@RequestParam(value = "archivoImagen") MultipartFile file ,Model model) {
+		
+		if(result.hasErrors()) {
+			model.addAttribute("categorias", categoriaService.listaCategorias());
+			return "vacantes/formVacante";
+		}
 		
 		if(!file.isEmpty()) {
 			

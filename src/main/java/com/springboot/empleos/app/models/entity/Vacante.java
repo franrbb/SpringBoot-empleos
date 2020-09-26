@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,16 +24,28 @@ public class Vacante implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotEmpty
 	private String nombre;
+	
+	@NotEmpty
 	private String descripcion;
 	
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date fecha;
+	
+	@NotNull
 	private Double salario;
+	
 	private Integer destacado;
+	
 	private String imagen;
+	
 	private String estatus;
+	
+	@NotEmpty
 	private String detalles;
 
 	@OneToOne

@@ -16,13 +16,15 @@
                 <div class="col-md-3"> 
                   <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" placeholder="Titulo de la oferta de trabajo" required="required">
+                    <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" th:errorclass="alert-danger" placeholder="Titulo de la oferta de trabajo">
+                  	<span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
                   </div>
                 </div>
                 <div class="col-md-9"> 
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
-                    <input type="text" class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}" placeholder="Breve descripcion de la oferta de trabajo" required="required">
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}" th:errorclass="alert-danger" placeholder="Breve descripcion de la oferta de trabajo">
+                  	<span class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
                   </div> 
                 </div>    
               </div>    
@@ -49,7 +51,8 @@
                 <div class="col-md-3"> 
                   <div class="form-group">
                     <label for="fecha">Fecha de Publicación</label>
-                    <input type="text" class="form-control" name="fecha" id="fecha" th:field="*{fecha}" placeholder="Fecha de publicacion" required="required">
+                    <input type="text" class="form-control" name="fecha" id="fecha" th:field="*{fecha}" th:errorclass="alert-danger" placeholder="Fecha de publicacion">
+                    <span class="text-danger" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></span>
                   </div>  
                 </div>
                 <div class="col-md-3"> 
@@ -68,7 +71,8 @@
                 <div class="col-md-3"> 
                   <div class="form-group">
                     <label for="salario">Salario Ofrecido (Aprox)</label>
-                    <input type="text" class="form-control" name="salario" id="salario" th:field="*{salario}" placeholder="Salario aproximado." required="required">
+                    <input type="text" class="form-control" name="salario" id="salario" th:field="*{salario}" th:errorclass="alert-danger" placeholder="Salario aproximado.">
+                  	<span class="text-danger" th:if="${#fields.hasErrors('salario')}" th:errors="*{salario}"></span>
                   </div>
                 </div>
                 <div class="col-md-3"> 
@@ -82,8 +86,9 @@
               <div class="row">
                 <div class="col-md-9"> 
                   <div class="form-group">
-                    <label for="detalles"><strong>Detalles</strong></label>          
-                    <textarea class="form-control" name="detalles" id="detalles" th:field="*{detalles}" rows="7"></textarea>
+                    <label for="detalles"><strong>Detalles</strong></label>
+                    <textarea class="form-control" name="detalles" id="detalles" th:field="*{detalles}" th:errorclass="alert-danger" rows="7"></textarea>
+                  	<span class="text-danger" th:if="${#fields.hasErrors('detalles')}" th:errors="*{detalles}"></span>
                   </div> 
                 </div> 
                 <!--<div class="col-md-3">
