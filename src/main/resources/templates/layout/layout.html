@@ -28,7 +28,9 @@
 		</nav>
 		
 		<div class="mt-3">
+			<div class="alert alert-success" th:if="${success != null}" th:text="${success}"></div>
 			<div class="alert alert-warning" th:if="${warning != null}" th:text="${warning}"></div>
+			<div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
 		</div>
 		
 	</header>

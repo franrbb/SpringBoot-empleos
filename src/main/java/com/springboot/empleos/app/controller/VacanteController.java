@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springboot.empleos.app.models.entity.Vacante;
 import com.springboot.empleos.app.models.service.ICategoriaService;
@@ -58,19 +59,29 @@ public class VacanteController {
 	}
 	
 	@GetMapping("/formVacante/{id}")
-	public String editar(@PathVariable(value = "id") Long id, Vacante vacante, Model model) {
+	public String editar(@PathVariable(value = "id") Long id, Vacante vacante, RedirectAttributes flash, Model model) {
 		
 		if(id > 0) {
 			vacante = vacanteService.findOne(id);
-			model.addAttribute("vacante", vacante);
-			model.addAttribute("categorias", categoriaService.listaCategorias());
+			if(vacante == null) {
+				flash.addFlashAttribute("error", "La vacante no existe");
+				return "redirect:/vacantes/listaVacantes";
+			}
+		}else {
+			flash.addFlashAttribute("error", "El ID de la vacante no puede ser cero");
+			return "redirect:/vacantes/listaVacantes";
 		}
+		
+		model.addAttribute("vacante", vacante);
+		model.addAttribute("categorias", categoriaService.listaCategorias());
 		
 		return "vacantes/formVacante";
 	}
 	
 	@PostMapping("/formVacante")
-	public String save(@Valid Vacante vacante, BindingResult result, SessionStatus session, @RequestParam(value = "archivoImagen") MultipartFile file ,Model model) {
+	public String save(@Valid Vacante vacante, BindingResult result, SessionStatus session, RedirectAttributes flash, @RequestParam(value = "archivoImagen") MultipartFile file ,Model model) {
+		
+		String mensajeFlash = (vacante.getId() != null) ? "Vacante editada con éxito" : "Vacante creada con éxito";
 		
 		if(result.hasErrors()) {
 			model.addAttribute("categorias", categoriaService.listaCategorias());
@@ -96,15 +107,17 @@ public class VacanteController {
 		
 		vacanteService.save(vacante);
 		session.setComplete();
+		flash.addFlashAttribute("success", mensajeFlash);
 		
 		return "redirect:/vacantes/listaVacantes";
 	}
 	
 	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable(value = "id") Long id) {
+	public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		
 		if(id > 0) {
 			vacanteService.delete(id);
+			flash.addFlashAttribute("success", "La vacante se ha eliminado con éxito");
 		}
 		
 		return "redirect:/vacantes/listaVacantes";
