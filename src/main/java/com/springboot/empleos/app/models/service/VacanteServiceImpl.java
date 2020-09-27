@@ -39,4 +39,11 @@ public class VacanteServiceImpl implements IVacanteService {
 		
 	}
 
+	@Override
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		vacanteDao.deleteById(id);
+		
+	}
+
 }

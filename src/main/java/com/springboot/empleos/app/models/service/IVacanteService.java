@@ -13,5 +13,7 @@ public interface IVacanteService {
 	public Vacante findOne(Long id);
 	
 	public void save(Vacante vacante);
+	
+	public void delete(Long id);
 
 }
