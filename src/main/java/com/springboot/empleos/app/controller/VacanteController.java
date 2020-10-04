@@ -1,10 +1,6 @@
 package com.springboot.empleos.app.controller;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -24,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springboot.empleos.app.models.entity.Vacante;
 import com.springboot.empleos.app.models.service.ICategoriaService;
+import com.springboot.empleos.app.models.service.IUploadsService;
 import com.springboot.empleos.app.models.service.IVacanteService;
 
 @Controller
@@ -36,6 +33,9 @@ public class VacanteController {
 	
 	@Autowired
 	private ICategoriaService categoriaService;
+	
+	@Autowired
+	private IUploadsService uploadsService;
 	
 	@GetMapping("/listaVacantes")
 	public String listado(Model model){
@@ -90,20 +90,21 @@ public class VacanteController {
 		
 		if(!file.isEmpty()) {
 			
-			String uniqueFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-			//Crear ruta donde se guardan las imagenes. Se asocia el nombre a la ruta
-			Path rootPath = Paths.get("uploads").resolve(uniqueFilename);
-			//Agregamos la ruta absoluta
-			Path rootAbsolutePath = rootPath.toAbsolutePath();
+			if(vacante.getId() != null && vacante.getId() > 0 && vacante.getImagen() != null && vacante.getImagen().length() > 0) {
+				uploadsService.delete(vacante.getImagen());
+			}
 			
+			String uniqueFilename = null;
 			try {
-				Files.copy(file.getInputStream(), rootAbsolutePath);
-				vacante.setImagen(uniqueFilename);
+				uniqueFilename = uploadsService.copy(file);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			vacante.setImagen(uniqueFilename);
 		}
+			
 		
 		vacanteService.save(vacante);
 		session.setComplete();
@@ -116,8 +117,12 @@ public class VacanteController {
 	public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		
 		if(id > 0) {
+			Vacante vacante = vacanteService.findOne(id);
 			vacanteService.delete(id);
 			flash.addFlashAttribute("success", "La vacante se ha eliminado con éxito");
+			
+			uploadsService.delete(vacante.getImagen());
+			
 		}
 		
 		return "redirect:/vacantes/listaVacantes";
