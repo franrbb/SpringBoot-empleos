@@ -3,6 +3,8 @@ package com.springboot.empleos.app.models.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.empleos.app.models.dao.IVacanteDao;
@@ -18,6 +20,12 @@ public class VacanteServiceImpl implements IVacanteService {
 	public List<Vacante> listaVacantes() {
 		// TODO Auto-generated method stub
 		return vacanteDao.findAll();
+	}
+	
+	@Override
+	public Page<Vacante> paginacion(Pageable page) {
+		// TODO Auto-generated method stub
+		return vacanteDao.findAll(page);
 	}
 
 	@Override
@@ -45,5 +53,7 @@ public class VacanteServiceImpl implements IVacanteService {
 		vacanteDao.deleteById(id);
 		
 	}
+
+	
 
 }
