@@ -16,7 +16,8 @@
                 <div class="col-md-6"> 
                   <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" placeholder="Escriba el nombre de la categoria" required="required">
+                    <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" th:errorclass="alert-danger" placeholder="Escriba el nombre de la categoria">
+                    <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
                   </div>
                 </div>                
               </div> 
@@ -24,7 +25,8 @@
                 <div class="col-md-6"> 
                   <div class="form-group">
                     <label for="descripcion">Descripción</label>
-                    <textarea class="form-control" name="descripcion" id="descripcion" th:field="*{descripcion}" rows="2"></textarea>
+                    <textarea class="form-control" name="descripcion" id="descripcion" th:field="*{descripcion}" th:errorclass="alert-danger" rows="2"></textarea>
+                    <span class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
                   </div> 
                 </div>                
               </div> 
