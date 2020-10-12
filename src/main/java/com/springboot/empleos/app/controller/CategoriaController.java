@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springboot.empleos.app.models.entity.Categoria;
 import com.springboot.empleos.app.models.service.ICategoriaService;
@@ -56,12 +57,20 @@ public class CategoriaController {
 	}
 	
 	@GetMapping("/formCategoria/{id}")
-	public String formEditar(@PathVariable(value = "id")Long id, Model model) {
+	public String formEditar(@PathVariable(value = "id")Long id, RedirectAttributes flash, Model model) {
 		
 		Categoria categoria = new Categoria();
 		
 		if(id > 0) {
 			categoria = categoriaService.buscarCategoria(id);
+			if(categoria == null) {
+				flash.addFlashAttribute("error", "La categoria no existe");
+				return "redirect:/categorias/listaCategorias";
+				
+			}
+		}else {
+			flash.addFlashAttribute("error", "El ID de la vacante no puede ser cero");
+			return "redirect:/categorias/listaCategorias";
 		}
 		
 		model.addAttribute("titulo", "EmpleosApp | Aplicación para Publicar Ofertas de Trabajo.");
@@ -71,9 +80,9 @@ public class CategoriaController {
 	}
 	
 	@PostMapping("/formCategoria")
-	public String save(@Valid Categoria categoria, BindingResult result, SessionStatus status ,Model model) {
+	public String save(@Valid Categoria categoria, BindingResult result, SessionStatus status, RedirectAttributes flash, Model model) {
 		
-		//validador.validate(categoria, result);
+		String mensajeFlash = (categoria.getId() != null ? "La categoria se ha editado con éxito" : "La categoria se ha guardado con éxito");
 		
 		if(result.hasErrors()) {
 			return "categorias/formCategoria";
@@ -81,15 +90,17 @@ public class CategoriaController {
 		
 		categoriaService.save(categoria);
 		status.setComplete();
+		flash.addFlashAttribute("success", mensajeFlash);
 		
 		return "redirect:/categorias/listaCategorias";
 	}
 	
 	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable(value = "id")Long id) {
+	public String delete(@PathVariable(value = "id")Long id, RedirectAttributes flash) {
 		
 		if(id > 0) {
 			categoriaService.delete(id);
+			flash.addFlashAttribute("success", "La categoria de ha eliminado con éxito");
 		}
 		
 		return "redirect:/categorias/listaCategorias";
