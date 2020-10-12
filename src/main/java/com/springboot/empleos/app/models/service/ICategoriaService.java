@@ -7,5 +7,7 @@ import com.springboot.empleos.app.models.entity.Categoria;
 public interface ICategoriaService {
 	
 	public List<Categoria> listaCategorias();
+	
+	public void save(Categoria categoria);
 
 }

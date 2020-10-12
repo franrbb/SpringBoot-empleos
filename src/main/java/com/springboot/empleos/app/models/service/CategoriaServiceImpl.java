@@ -20,4 +20,10 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		return categoriaDao.findAll();
 	}
 
+	@Override
+	public void save(Categoria categoria) {
+		// TODO Auto-generated method stub
+		categoriaDao.save(categoria);
+	}
+
 }
