@@ -9,8 +9,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.springboot.empleos.app.models.entity.Categoria;
 import com.springboot.empleos.app.models.service.ICategoriaService;
@@ -18,6 +21,7 @@ import com.springboot.empleos.app.validation.CategoriaValidador;
 
 @Controller
 @RequestMapping("/categorias")
+@SessionAttributes("categoria")
 public class CategoriaController {
 	
 	@Autowired
@@ -41,7 +45,7 @@ public class CategoriaController {
 	}
 	
 	@GetMapping("/formCategoria")
-	public String form(Model model) {
+	public String formGuarda(Model model) {
 		
 		Categoria categoria = new Categoria();
 		
@@ -51,8 +55,23 @@ public class CategoriaController {
 		return "categorias/formCategoria";
 	}
 	
+	@GetMapping("/formCategoria/{id}")
+	public String formEditar(@PathVariable(value = "id")Long id, Model model) {
+		
+		Categoria categoria = new Categoria();
+		
+		if(id > 0) {
+			categoria = categoriaService.buscarCategoria(id);
+		}
+		
+		model.addAttribute("titulo", "EmpleosApp | Aplicación para Publicar Ofertas de Trabajo.");
+		model.addAttribute("categoria", categoria);
+		
+		return "categorias/formCategoria";
+	}
+	
 	@PostMapping("/formCategoria")
-	public String save(@Valid Categoria categoria, BindingResult result, Model model) {
+	public String save(@Valid Categoria categoria, BindingResult result, SessionStatus status ,Model model) {
 		
 		//validador.validate(categoria, result);
 		
@@ -61,6 +80,7 @@ public class CategoriaController {
 		}
 		
 		categoriaService.save(categoria);
+		status.setComplete();
 		
 		return "redirect:/categorias/listaCategorias";
 	}

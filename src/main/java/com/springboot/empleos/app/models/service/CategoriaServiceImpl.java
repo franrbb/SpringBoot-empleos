@@ -26,4 +26,10 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		categoriaDao.save(categoria);
 	}
 
+	@Override
+	public Categoria buscarCategoria(Long id) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findById(id).orElse(null);
+	}
+
 }
