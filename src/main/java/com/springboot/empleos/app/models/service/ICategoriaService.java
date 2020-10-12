@@ -11,5 +11,7 @@ public interface ICategoriaService {
 	public void save(Categoria categoria);
 	
 	public Categoria buscarCategoria(Long id);
+	
+	public void delete(Long id);
 
 }

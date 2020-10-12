@@ -32,4 +32,10 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		return categoriaDao.findById(id).orElse(null);
 	}
 
+	@Override
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		categoriaDao.deleteById(id);
+	}
+
 }

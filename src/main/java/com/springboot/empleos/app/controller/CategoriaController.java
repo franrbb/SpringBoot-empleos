@@ -45,7 +45,7 @@ public class CategoriaController {
 	}
 	
 	@GetMapping("/formCategoria")
-	public String formGuarda(Model model) {
+	public String formGuardar(Model model) {
 		
 		Categoria categoria = new Categoria();
 		
@@ -81,6 +81,16 @@ public class CategoriaController {
 		
 		categoriaService.save(categoria);
 		status.setComplete();
+		
+		return "redirect:/categorias/listaCategorias";
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable(value = "id")Long id) {
+		
+		if(id > 0) {
+			categoriaService.delete(id);
+		}
 		
 		return "redirect:/categorias/listaCategorias";
 	}
