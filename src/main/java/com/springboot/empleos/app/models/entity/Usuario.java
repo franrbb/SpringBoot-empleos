@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -20,7 +21,7 @@ public class Usuario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment MySQL
-	private Integer id;
+	private Long id;
 	private String username;
 	private String nombre;
 	private String email;
@@ -37,11 +38,11 @@ public class Usuario {
 	)
 	private List<Perfil> perfiles;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -99,6 +100,11 @@ public class Usuario {
 
 	public void setPerfiles(List<Perfil> perfiles) {
 		this.perfiles = perfiles;
+	}
+	
+	@PrePersist
+	public void prePersist() {
+		fechaRegistro = new Date();
 	}
 	
 	// Metodo para agregar perfiles

@@ -1,18 +1,26 @@
 package com.springboot.empleos.app;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.springboot.empleos.app.auth.LoginSuccessHandler;
+
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	private LoginSuccessHandler successHandler;
+	
+	@Autowired
+	private DataSource dataSource;
 	
 	/**
 	 * Personalizamos el Acceso a las URLs de la aplicación
@@ -23,22 +31,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
     	
     	//Los recursos estáticos no requieren autenticación
         .antMatchers(
-                "/css/**",                        
+                "/css/**",
+                "/images/**",
                 "/js/**",
                 "/uploads/**").permitAll()
         
-     //Las vistas públicas no requieren autenticación
+        //Las vistas públicas no requieren autenticación
         .antMatchers(
         		"/",
-        		"/detalle/**").permitAll()
+        		"/detalle/**",
+        		"/usuarios/**").permitAll()
      
-     //Asignar permisos a URLs por ROLES        
-        .antMatchers("/vacantes/**").hasAnyRole("ADMIN")
-        .antMatchers("/categorias/**").hasAnyRole("ADMIN")
-        .antMatchers("/usuarios/**").hasAnyRole("ADMIN")
+        //Asignar permisos a URLs por ROLES        
+        .antMatchers("/vacantes/**").hasAnyAuthority("ADMINISTRADOR")
+        .antMatchers("/categorias/**").hasAnyAuthority("ADMINISTRADOR")
         
-     //Todas las demás URLs de la Aplicación requieren autenticación
-        .anyRequest().authenticated();
+        //Todas las demás URLs de la Aplicación requieren autenticación
+        .anyRequest().authenticated()
+		
+		//El formulario de Login no requiere autenticacion
+        .and().formLogin().successHandler(successHandler).loginPage("/login").permitAll()        
+        .and().logout().permitAll()
+        .and().exceptionHandling().accessDeniedPage("/error403");
     }
 	
 	/**
@@ -53,11 +67,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder builder) throws Exception {
 		
-		UserBuilder users = User.builder();
+		/*PasswordEncoder encoder = passwordEncoder();
+		UserBuilder users = User.builder().passwordEncoder(encoder::encode);
 		
 		builder.inMemoryAuthentication()
 		.withUser(users.username("admin").password("1234").roles("ADMIN", "USER"))
-		.withUser(users.username("keko").password("1234").roles("USER"));
+		.withUser(users.username("keko").password("1234").roles("USER"));*/
+		
+		builder.jdbcAuthentication().dataSource(dataSource)
+		.usersByUsernameQuery("select username, password, estatus from Usuarios where username=?")
+		.authoritiesByUsernameQuery("select u.username, p.perfil from UsuarioPerfil up " + 
+			"inner join Usuarios u on u.id = up.idUsuario " + 
+			"inner join Perfiles p on p.id = up.idPerfil " + 
+			"where u.username = ?");
 		
 	}
 
